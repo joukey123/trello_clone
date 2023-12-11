@@ -3,29 +3,33 @@ import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
 
 interface IDraggableCard {
-  toDo: string;
+  toDoId: number;
+  toDoText: string;
   index: number;
 }
-const List = styled.div<{ isDragging: boolean }>`
-  background-color: ${(props) => (props.isDragging ? "#9c88ff" : "#dcdde1")};
+interface Ilist {
+  $isDragging: boolean;
+}
+const List = styled.div<Ilist>`
+  background-color: ${(props) => (props.$isDragging ? "#9c88ff" : "#dcdde1")};
   box-shadow: ${(props) =>
-    props.isDragging ? "1px 1px 5px rgba(0,0,0,0.5)" : "none"};
+    props.$isDragging ? "1px 1px 5px rgba(0,0,0,0.5)" : "none"};
   padding: 5px;
   margin-bottom: 10px;
   border-radius: 5px;
-  color: ${(props) => (props.isDragging ? "white" : "black")};
+  color: ${(props) => (props.$isDragging ? "white" : "black")};
 `;
-function DraggableCard({ toDo, index }: IDraggableCard) {
+function DraggableCard({ toDoId, toDoText, index }: IDraggableCard) {
   return (
-    <Draggable key={toDo} draggableId={toDo} index={index}>
+    <Draggable key={toDoId} draggableId={toDoId + ""} index={index}>
       {(magic, snapshot) => (
         <List
-          isDragging={snapshot.isDragging}
+          $isDragging={snapshot.isDragging}
           ref={magic.innerRef}
           {...magic.draggableProps}
           {...magic.dragHandleProps}
         >
-          {toDo}
+          {toDoText}
         </List>
       )}
     </Draggable>
