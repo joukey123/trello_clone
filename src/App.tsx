@@ -1,4 +1,4 @@
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { toDo } from "./Atoms";
@@ -9,7 +9,7 @@ const Wrap = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
 `;
 
@@ -22,7 +22,34 @@ const Boards = styled.div`
 
 function App() {
   const [toDos, setTodo] = useRecoilState(toDo);
-  const onDragEnd = ({ draggableId, destination, source }: DropResult) => {
+  const onDragEnd = (info: DropResult) => {
+    console.log(info);
+    const { destination, source, draggableId } = info;
+    if (!destination) return;
+    if (destination?.droppableId === source.droppableId) {
+      setTodo((allBoards) => {
+        const boardCopy = [...allBoards[source.droppableId]];
+        boardCopy.splice(source.index, 1);
+        boardCopy.splice(destination?.index, 0, draggableId);
+        return {
+          ...allBoards,
+          [source.droppableId]: boardCopy,
+        };
+      });
+    }
+    if (destination.droppableId !== source.droppableId) {
+      setTodo((allBoards) => {
+        const sourceBoard = [...allBoards[source.droppableId]];
+        const destinationBoard = [...allBoards[destination.droppableId]];
+        sourceBoard.splice(source.index, 1);
+        destinationBoard.splice(destination.index, 0, draggableId);
+        return {
+          ...allBoards,
+          [source.droppableId]: sourceBoard,
+          [destination.droppableId]: destinationBoard,
+        };
+      });
+    }
     // if (!destination) return;
     // setTodo((oldTodo) => {
     //   const toDoCopy = [...oldTodo];
