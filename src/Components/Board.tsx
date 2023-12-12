@@ -5,10 +5,11 @@ import { useForm } from "react-hook-form";
 import { IToDo, toDo } from "../Atoms";
 import { useSetRecoilState } from "recoil";
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $droppableId: string }>`
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color: ${(props) =>
+    props.$droppableId === "Delete" ? "tomato" : "white"};
   border-radius: 5px;
   padding: 10px;
 `;
@@ -21,11 +22,14 @@ const Form = styled.form`
 interface Ilist {
   $isDraggingOver: boolean;
   $isdraggingFromThisWith: boolean;
+  $droppableId: string;
 }
 
 const Lists = styled.div<Ilist>`
   background-color: ${(props) =>
-    props.$isDraggingOver
+    props.$droppableId === "Delete"
+      ? "tomato"
+      : props.$isDraggingOver
       ? "#f5f6fa"
       : props.$isdraggingFromThisWith
       ? "#dcdde1"
@@ -65,21 +69,24 @@ function Board({ toDos, boardId }: IBoard) {
     setValue(boardId, "");
   };
   return (
-    <Wrapper>
+    <Wrapper $droppableId={boardId}>
       <Title>{boardId}</Title>
-      <Form onSubmit={handleSubmit(onValid)}>
-        <input
-          {...register(boardId, { required: true })}
-          type="text"
-          placeholder={`write ${boardId}`}
-        />
-        <button>click</button>
-      </Form>
+      {boardId !== "Delete" ? (
+        <Form onSubmit={handleSubmit(onValid)}>
+          <input
+            {...register(boardId, { required: true })}
+            type="text"
+            placeholder={`write ${boardId}`}
+          />
+          <button>click</button>
+        </Form>
+      ) : null}
       <Droppable droppableId={boardId}>
         {(magic, snapshot) => (
           <Lists
             $isdraggingFromThisWith={Boolean(snapshot.draggingFromThisWith)}
             $isDraggingOver={snapshot.isDraggingOver}
+            $droppableId={boardId}
             ref={magic.innerRef}
             {...magic.droppableProps}
           >
