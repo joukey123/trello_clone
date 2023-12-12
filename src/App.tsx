@@ -1,9 +1,15 @@
-import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable,
+} from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { toDo } from "./Atoms";
 import Board from "./Components/Board";
 import { useForm } from "react-hook-form";
+import AddBoard from "./Components/AddBoard";
 
 const Wrap = styled.div`
   display: flex;
@@ -24,24 +30,8 @@ const Boards = styled.div`
   }
 `;
 
-interface IForm {
-  text: string;
-}
-
 function App() {
-  const { register, handleSubmit, setValue } = useForm<IForm>();
   const [toDos, setTodo] = useRecoilState(toDo);
-
-  const onVaild = (text: IForm) => {
-    console.log(text);
-    setTodo((allBoards) => {
-      return {
-        [text.text]: [],
-        ...allBoards,
-      };
-    });
-    setValue("text", "");
-  };
 
   const onDragEnd = (info: DropResult) => {
     const { destination, source } = info;
@@ -94,9 +84,7 @@ function App() {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrap>
-        <form onSubmit={handleSubmit(onVaild)}>
-          <input {...register("text")} placeholder="Add Board" />
-        </form>
+        <AddBoard />
         <Boards>
           {Object.keys(toDos).map((item) => (
             <Board key={item} boardId={item} toDos={toDos[item]} />

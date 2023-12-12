@@ -17,6 +17,20 @@ const Form = styled.form`
   width: 100%;
   display: flex;
   margin-bottom: 10px;
+  input {
+    padding: 5px;
+    outline: 0;
+    border: 0;
+    border-radius: 5px;
+    background-color: #eee;
+    margin-right: 5px;
+  }
+  button {
+    border: 0;
+    border-radius: 5px;
+    background-color: teal;
+    color: white;
+  }
 `;
 
 interface Ilist {
@@ -39,6 +53,7 @@ const Lists = styled.div<Ilist>`
 `;
 
 const Title = styled.h2`
+  font-weight: bold;
   text-align: center;
   margin-bottom: 10px;
   color: ${(props) => props.theme.textColor};
@@ -78,7 +93,7 @@ function Board({ toDos, boardId }: IBoard) {
             type="text"
             placeholder={`write ${boardId}`}
           />
-          <button>click</button>
+          <button>ADD</button>
         </Form>
       ) : null}
       <Droppable droppableId={boardId}>
