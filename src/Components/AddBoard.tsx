@@ -22,11 +22,11 @@ function AddBoard() {
   const { register, handleSubmit, setValue } = useForm<IForm>();
   const [toDos, setTodo] = useRecoilState(toDo);
 
-  const onVaild = (text: IForm) => {
-    console.log(text);
+  const onVaild = (newBoard: IForm) => {
+    console.log(newBoard);
     setTodo((allBoards) => {
       return {
-        [text.text]: [],
+        [newBoard.text]: [],
         ...allBoards,
       };
     });
